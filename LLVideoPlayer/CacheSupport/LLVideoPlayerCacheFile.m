@@ -448,13 +448,14 @@ static int mapfile(const char *filename, void **out_data_ptr, size_t *out_data_l
 
 + (NSString *)cacheDirectory
 {
-    NSString *cache = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *cache = NSTemporaryDirectory();
     return [cache stringByAppendingPathComponent:@"LLVideoPlayer"];
 }
 
 + (NSString *)cacheFilePathWithURL:(NSURL *)url
 {
-    NSString *name = [url.absoluteString ll_md5];
+    NSString *videoPath = [[[url.absoluteString lastPathComponent] componentsSeparatedByString:@"?"] firstObject];
+    NSString *name = videoPath != nil ? videoPath : [url.absoluteString ll_md5];
     NSString *dir = [self cacheDirectory];
     return [dir stringByAppendingPathComponent:name];
 }
